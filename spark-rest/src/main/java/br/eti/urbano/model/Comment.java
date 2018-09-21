@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 @Data
 @Entity
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Comment extends DefaultModel{
 

@@ -6,7 +6,6 @@ import br.eti.urbano.model.User;
 import java.util.List;
 
 public class UserController implements GenericController<User> {
-
     @Override
     public void create(User entity) {
 
