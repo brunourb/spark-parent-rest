@@ -1,4 +1,4 @@
-package br.eti.urbano;
+package br.eti.urbano.service;
 
 import org.apache.log4j.Logger;
 

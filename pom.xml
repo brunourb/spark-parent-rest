@@ -72,6 +72,8 @@
         <checkstyle.header.file>${basedir}/config/java.header</checkstyle.header.file>
         <checkstyle.suppressions.file>${basedir}/config/suppressions.xml</checkstyle.suppressions.file>
         <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
+        <maven.lombok.plugin.version>1.18.0.0</maven.lombok.plugin.version>
+        <lombok.version>1.18.2</lombok.version>
 
     </properties>
 
