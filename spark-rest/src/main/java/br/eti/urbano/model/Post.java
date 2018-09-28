@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 @Entity
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Post extends DefaultModel {
 
     private String title;
