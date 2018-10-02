@@ -1,5 +1,6 @@
 package br.eti.urbano.model;
 
+import com.google.gson.annotations.JsonAdapter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
