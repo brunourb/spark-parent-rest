@@ -10,10 +10,11 @@ import java.util.List;
 
 import static spark.Spark.*;
 
-public class UserApi {
+public class ServiceApi {
 
-    final static Logger LOGGER = Logger.getLogger(UserApi.class);
+    final static Logger LOGGER = Logger.getLogger(ServiceApi.class);
     final static String CONTENT_TYPE = "application/json";
+    final static String TOKEN = "Bearer b9QLldmqZSVSsLfbubqR35SaTTzN8QVD";
 
     public static void main(String[] args) {
         users();
@@ -101,61 +102,83 @@ public class UserApi {
 
         List<Contact> lista = new ArrayList<Contact>();
 
-        path("/contact", () -> {
+        path("/api", () -> {
+            before("/*", (request, response) -> {
+                LOGGER.info("Received api call");
 
+                boolean authenticated = false;
 
-            get("", (request, response) -> {
+                authenticated = TOKEN.equals(request.headers("Authorization"));
 
-                //"TIPANDO" o retorno da requisição
-                response.type(CONTENT_TYPE);
-                final String mensagem = "Acesso ao método GET";
-                LOGGER.info(mensagem);
-                response.status(200);
-                return new Gson().toJson(lista);
+                if (!authenticated) {
+                    halt(401, new Gson().toJson("Sessao não autorizada. Favor informar TOKEN de acesso."));
+                }
             });
 
+            path("/contact", () -> {
 
-            post("", (request, response) -> {
 
-                //"TIPANDO" o retorno da requisição
+                get("", (request, response) -> {
 
-                response.type(CONTENT_TYPE);
+                    //"TIPANDO" o retorno da requisição
+                    response.type(CONTENT_TYPE);
+                    final String mensagem = "Acesso ao método GET";
+                    LOGGER.info(mensagem);
+                    response.status(200);
+                    return new Gson().toJson(lista);
+                });
 
-                Contact contact = new Gson().fromJson(request.body(), Contact.class);
-                lista.add(contact);
+                get("/:id", (request, response) -> {
 
-                final String mensagem = "Acesso ao método POST";
-                LOGGER.info(mensagem);
+                    //"TIPANDO" o retorno da requisição
+                    response.type(CONTENT_TYPE);
+                    final String mensagem = "Acesso ao método GET";
+                    LOGGER.info(mensagem);
+                    response.status(200);
+                    return new Gson().toJson(lista.stream()
+                            .filter(c -> c.getId().equals(Integer.parseInt(request.params(":id"))))
+                            .findAny().orElse(null));
+                });
 
-                response.status(201);
 
-                return new Gson().toJson(contact);
-            });
+                post("", (request, response) -> {
 
-            put("", (request, response) -> {
+                    //"TIPANDO" o retorno da requisição
 
-                Contact contact = new Gson().fromJson(request.body(), Contact.class);
+                    response.type(CONTENT_TYPE);
 
-                lista.removeIf(u -> u.getId().equals(contact.getId()));
-                lista.add(contact);
+                    Contact contact = new Gson().fromJson(request.body(), Contact.class);
+                    lista.add(contact);
 
-                final String mensagem = "Acesso ao método PUT";
-                LOGGER.info(mensagem);
-                response.status(201);
-                return new Gson().toJson(contact);
-            });
+                    final String mensagem = "Acesso ao método POST";
+                    LOGGER.info(mensagem);
 
-            delete("/:id", (request, response) -> {
+                    response.status(201);
 
-                Contact contact = new Gson().fromJson(request.body(), Contact.class);
-                contact.setId(Integer.parseInt(request.params(":id")));
+                    return new Gson().toJson(contact);
+                });
 
-                lista.removeIf(c -> c.getId().equals(c.getId()));
+                put("", (request, response) -> {
 
-                final String mensagem = "Acesso ao método DELETE. Registro deletado.";
-                LOGGER.info(mensagem);
-                response.status(204);
-                return mensagem;
+                    Contact contact = new Gson().fromJson(request.body(), Contact.class);
+                    lista.removeIf(u -> u.getId().equals(contact.getId()));
+                    lista.add(contact);
+
+                    final String mensagem = String.format("Acesso ao método PUT. Registro atualizado %d",contact.getId());
+                    LOGGER.info(mensagem);
+                    response.status(201);
+                    return new Gson().toJson(contact);
+                });
+
+                delete("/:id", (request, response) -> {
+
+                    lista.removeIf(c -> c.getId().equals(Integer.parseInt(request.params(":id"))));
+
+                    final String mensagem = String.format("Acesso ao método DELETE. Registro deletado %s.",request.params(":id"));
+                    LOGGER.info(mensagem);
+                    response.status(204);
+                    return mensagem;
+                });
             });
         });
     }

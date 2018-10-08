@@ -48,7 +48,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        br.eti.urbano.api.UserApi
+                                        br.eti.urbano.api.ServiceApi
                                     </mainClass>
                                 </manifest>
                             </archive>
