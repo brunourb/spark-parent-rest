@@ -12,6 +12,6 @@ import java.util.List;
 public class Contact extends DefaultModel {
 
     private String name;
-    private List<String> phones;
-    private List<String> address;
+    private String phones;
+    private String address;
 }

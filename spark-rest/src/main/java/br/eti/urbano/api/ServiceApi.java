@@ -104,6 +104,11 @@ public class ServiceApi {
 
         path("/api", () -> {
             before("/*", (request, response) -> {
+
+                if(request.pathInfo().endsWith("/")){
+                    request.pathInfo().substring(0, request.pathInfo().length() - 1);
+                }
+
                 LOGGER.info("Received api call");
 
                 boolean authenticated = false;
@@ -115,7 +120,7 @@ public class ServiceApi {
                 }
             });
 
-            path("/contact", () -> {
+            path("/contact/", () -> {
 
 
                 get("", (request, response) -> {
